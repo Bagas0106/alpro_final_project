@@ -1,11 +1,9 @@
 //Aplikasi Analisis sentimen komentar media sosial
 
 package main
-
 import "fmt"
 
 const NMAX int = 100
-
 type tabInt [NMAX]string
 
 func menu() {
