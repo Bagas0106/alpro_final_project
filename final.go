@@ -1,17 +1,20 @@
 //Aplikasi Analisis sentimen komentar media sosial
 
 package main
+
 import "fmt"
 
 const NMAX int = 100
+
 type tabInt [NMAX]string
 
 func menu() {
 	fmt.Println("=============MENU=============")
 	fmt.Println("1.Tambahkan komentar")
-	fmt.Println("2.Ubah komentar")
-	fmt.Println("3.Hapus komentar")
-	fmt.Println("4.EXIT")
+	fmt.Println("2.Tampilkan komentar")
+	fmt.Println("3.Ubah komentar")
+	fmt.Println("4.Hapus komentar")
+	fmt.Println("5.EXIT")
 	fmt.Println("==============================")
 	fmt.Println("pilih menu: ")
 }
@@ -30,14 +33,15 @@ func main() {
 			fmt.Println("Tambakan komentar : ")
 			tambahKometar(a, n)
 		case "2":
-			fmt.Println("Komentar yang ingin di ubah : ")
-			fmt.Println("Komentar yang baru : ")
 			tampilKomentar(&a, n)
 		case "3":
+			fmt.Println("Komentar yang ingin di ubah : ")
+			fmt.Println("Komentar yang baru : ")
+		case "4":
 			fmt.Println("komentar yang ingin di hapus : ")
 			fmt.Println("komentar setelah di hapus : ")
 
-		case "4":
+		case "5":
 			fmt.Println("terimakasih sudah masuk di aplikasi kami: ")
 			return
 		default:
