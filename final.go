@@ -29,35 +29,52 @@ func main() {
 		fmt.Scanln(&pilihan)
 		switch pilihan {
 		case "1":
-			fmt.Scan(&n)
-			fmt.Println("Tambakan komentar : ")
-			tambahKometar(a, n)
+			fmt.Println("Tambahkan komentar : ")
+			tambahKometar(&a, &n)
 		case "2":
-			tampilKomentar(&a, n)
+			tampilKomentar(a, n)
 		case "3":
-			fmt.Println("Komentar yang ingin di ubah : ")
-			fmt.Println("Komentar yang baru : ")
+			fmt.Println("Komentar yang ingin diubah : ")
+			ubahKomentar(&a, n)
 		case "4":
-			fmt.Println("komentar yang ingin di hapus : ")
-			fmt.Println("komentar setelah di hapus : ")
-
+			fmt.Println("Komentar yang ingin dihapus : ")
+			
 		case "5":
-			fmt.Println("terimakasih sudah masuk di aplikasi kami: ")
-			return
+			fmt.Println("Terima kasih sudah menggunakan aplikasi kami.")
+			return 
 		default:
-			fmt.Println("pilihan anda tidak valid")
+			fmt.Println("Pilihan anda tidak valid.")
 		}
 	}
 }
 
-func tambahKometar(a tabInt, n int) {
-	for i := 0; i < n-1; i++ {
-		fmt.Scan(&a[i])
+func tambahKometar(a *tabInt, n *int) {
+	var comment string
+	fmt.Scanln(&comment) 
+	a[*n] = comment
+	*n++
+	fmt.Println("Komentar ditambahkan.")
+}
+
+func tampilKomentar(a tabInt, n int) {
+	for i := 0; i < n; i++ {
+		fmt.Printf("%d. %s\n", i+1, a[i])
 	}
 }
 
-func tampilKomentar(a *tabInt, n int) {
-	for i := 1; i < n; i++ {
-		fmt.Println(i, ". ", a[i])
+func ubahKomentar(a *tabInt, n int) {
+	tampilKomentar(*a, n)
+	var index int
+	fmt.Print("Masukkan nomor komentar yang ingin diubah: ")
+	fmt.Scanln(&index)
+
+	if index < 1 || index > n {
+		fmt.Println("Nomor komentar tidak valid.")
+		return
 	}
+	var newComment string
+	fmt.Print("Masukkan komentar baru: ")
+	fmt.Scanln(&newComment)
+	a[index-1] = newComment
+	fmt.Println("Komentar berhasil diubah.")
 }
