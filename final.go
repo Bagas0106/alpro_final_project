@@ -10,9 +10,6 @@ const NMAX int = 100
 
 type tabInt [NMAX]string
 
-var kataPositif = [5]string{"baik", "bagus", "hebat", "ramah", "keren"}
-var kataNegatif = [5]string{"jelek", "buruk", "jahat", "payah", "lemah"}
-
 func menu() {
 	fmt.Println("|==============================|")
 	fmt.Println("|             MENU             |")
@@ -32,6 +29,7 @@ func main() {
 	var a tabInt
 	var n int
 	var pilihan string
+	var positif, negatif, netral int
 
 	for {
 		menu()
@@ -50,7 +48,8 @@ func main() {
 			hapusKomentar(&a, &n)
 		case "5":
 			fmt.Println("daftar berapa komentar positif dan negatif")
-
+			positif, negatif, netral = analisisSentiment(a, n)
+			fmt.Printf("Hasil Analisis:\nPositif: %d\nNegatif: %d\nNetral: %d\n", positif, negatif, netral)
 		case "6":
 			fmt.Println("Terima kasih sudah menggunakan aplikasi kami.")
 			return
@@ -102,4 +101,33 @@ func hapusKomentar(a *tabInt, n *int) {
 	a[*n-1] = ""
 	*n--
 	fmt.Println("Komentar berhasil dihapus.")
+}
+
+func analisisSentiment(a tabInt, n int) (int, int, int) {
+	kataPositif := []string{"baik", "bagus", "hebat", "ramah", "keren"}
+	kataNegatif := []string{"jelek", "buruk", "jahat", "payah", "lemah"}
+
+	var positif, negatif, netral int
+	var kata string
+	for i := 0; i < n; i++ {
+		kata = a[i]
+		if check(kataPositif, n, kata) {
+			positif++
+		} else if check(kataNegatif, n, kata) {
+			negatif++
+		} else {
+			netral++
+		}
+	}
+
+	return positif, negatif, netral
+}
+
+func check(a []string, n int, kata string) bool {
+	for i := 0; i < n; i++ {
+		if a[i] == kata {
+			return true
+		}
+	}
+	return false
 }
