@@ -14,15 +14,18 @@ var kataPositif = [5]string{"baik", "bagus", "hebat", "ramah", "keren"}
 var kataNegatif = [5]string{"jelek", "buruk", "jahat", "payah", "lemah"}
 
 func menu() {
-	fmt.Println("=============MENU=============")
-	fmt.Println("1.Tambahkan komentar")
-	fmt.Println("2.Tampilkan komentar")
-	fmt.Println("3.Ubah komentar")
-	fmt.Println("4.Hapus komentar")
-	fmt.Println("5.analisis sentiment komentar")
-	fmt.Println("6.EXIT")
-	fmt.Println("==============================")
-	fmt.Println("pilih menu: ")
+	fmt.Println("|==============================|")
+	fmt.Println("|             MENU             |")
+	fmt.Println("|==============================|")
+	fmt.Println("|1.Tambahkan komentar          |")
+	fmt.Println("|2.Tampilkan komentar          |")
+	fmt.Println("|3.Ubah komentar               |")
+	fmt.Println("|4.Hapus komentar              |")
+	fmt.Println("|5.analisis sentiment komentar |")
+	fmt.Println("|6.EXIT                        |")
+	fmt.Println("|==============================|")
+	fmt.Print("pilih menu: ")
+
 }
 
 func main() {
