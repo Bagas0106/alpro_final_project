@@ -15,16 +15,20 @@ type comment struct {
 type tabInt [NMAX]comment
 
 func menu() {
-	fmt.Println("|==============================|")
-	fmt.Println("|             MENU             |")
-	fmt.Println("|==============================|")
-	fmt.Println("|1.Tambahkan komentar          |")
-	fmt.Println("|2.Tampilkan komentar          |")
-	fmt.Println("|3.Ubah komentar               |")
-	fmt.Println("|4.Hapus komentar              |")
-	fmt.Println("|5.analisis sentiment komentar |")
-	fmt.Println("|6.EXIT                        |")
-	fmt.Println("|==============================|")
+	fmt.Println("|========================================================|")
+	fmt.Println("|                           MENU                         |")
+	fmt.Println("|========================================================|")
+	fmt.Println("|1.Tambahkan komentar                                    |")
+	fmt.Println("|2.Tampilkan komentar                                    |")
+	fmt.Println("|3.Ubah komentar                                         |")
+	fmt.Println("|4.Hapus komentar                                        |")
+	fmt.Println("|5.analisis sentiment komentar                           |")
+	fmt.Println("|6.Urutkan Komentar (Ascending)                          |")
+	fmt.Println("|7.Urutkan Komentar (Descending)                         |")
+	fmt.Println("|8.Cari Komentar berdasarkan ID (binary search)          |")
+	fmt.Println("|9.Cari Komentar berdasarkan Kata (sequencial search)    |")
+	fmt.Println("|10.EXIT                                                 |")
+	fmt.Println("|========================================================|")
 	fmt.Print("pilih menu: ")
 
 }
@@ -42,6 +46,7 @@ func main() {
 		case "1":
 			tambahKomentar(&a, &n)
 		case "2":
+			fmt.Print("list Komentar:")
 			tampilKomentar(a, n)
 		case "3":
 			fmt.Println("List komentar : ")
@@ -56,6 +61,31 @@ func main() {
 			positif, negatif = analisisSentiment(a, n)
 			fmt.Printf("Hasil Analisis:\nPositif : %d\nNegatif : %d\n", positif, negatif)
 		case "6":
+			sortAscending(&a, n)
+			tampilKomentar(a, n)
+		case "7":
+			sortDescending(&a, n)
+			tampilKomentar(a, n)
+		case "8":
+			var idx int
+			var cariID int
+			fmt.Print("Masukan code yang dicari: ")
+			fmt.Scanln(&cariID)
+			idx = BinarySearch(a, n, cariID)
+			if idx != -1 {
+				fmt.Println("Komentar ditemukan")
+				fmt.Printf("%-6s %-30s\n", "ID", "Komentar")
+				fmt.Printf("%-6d %s %s %s\n", a[idx].id, a[idx].kata1, a[idx].kata2, a[idx].kata3)
+			}
+			if idx == -1 {
+				fmt.Print("Komentar tidak ditemukan")
+			}
+		case "9":
+			var kata string
+			fmt.Print("Masukan Kata yang dicari: ")
+			fmt.Scanln(&kata)
+			SeqSearch(a, n, kata)
+		case "10":
 			fmt.Println("Terima kasih sudah menggunakan aplikasi kami.")
 			return
 		default:
@@ -67,9 +97,9 @@ func main() {
 func tambahKomentar(a *tabInt, n *int) {
 	var kata1, kata2, kata3 string
 	var id int
-	fmt.Print("Masukan id : ")
+	fmt.Print("Masukan id (Berupa angka): ")
 	fmt.Scanln(&id)
-	for checkk(*a, *n, id) == false {
+	for checkidn(*a, *n, id) == false {
 		fmt.Println("ID sudah ada, buat ID baru")
 		fmt.Print("Masukan ID baru : ")
 		fmt.Scanln(&id)
@@ -84,7 +114,7 @@ func tambahKomentar(a *tabInt, n *int) {
 	fmt.Println("Komentar ditambahkan.")
 }
 
-func checkk(a tabInt, n int, id int) bool {
+func checkidn(a tabInt, n int, id int) bool {
 	for i := 0; i < n; i++ {
 		if id == a[i].id {
 			return false
@@ -102,7 +132,7 @@ func tampilKomentar(a tabInt, n int) {
 
 func ubahKomentar(a *tabInt, n int) {
 	tampilKomentar(*a, n)
-	var idlama, idbaru, idx int
+	var idlama, idx int
 	var kata1, kata2, kata3 string
 
 	fmt.Print("Masukan ID komentar yang ingin di ubah : ")
@@ -120,12 +150,10 @@ func ubahKomentar(a *tabInt, n int) {
 		return
 	}
 
-	fmt.Print("Masukan ID baru : ")
-	fmt.Scanln(&idbaru)
 	fmt.Print("Tambahkan komentar baru (3 kata) : ")
 	fmt.Scanln(&kata1, &kata2, &kata3)
 
-	a[idx].id = idbaru
+	a[idx].id = idlama
 	a[idx].kata1 = kata1
 	a[idx].kata2 = kata2
 	a[idx].kata3 = kata3
@@ -186,12 +214,68 @@ func analisisSentiment(a tabInt, n int) (int, int) {
 	return positif, negatif
 }
 
-func check(pnt []string, kata string) bool {
+func check(pn []string, kata string) bool {
 	for i := 0; i < 8; i++ {
-		if pnt[i] == kata {
+		if pn[i] == kata {
 			return true
 		}
 	}
 	return false
 }
 
+func sortAscending(A *tabInt, n int) {
+	for i := 1; i < n; i++ {
+		kata := A[i]
+		temp := i - 1
+		for temp >= 0 && A[temp].id > kata.id {
+			A[temp+1] = A[temp]
+			temp--
+		}
+		A[temp+1] = kata
+	}
+	fmt.Println("Komentar berhasil diurutkan")
+}
+
+func sortDescending(A *tabInt, n int) {
+	for i := 1; i < n; i++ {
+		kata := A[i]
+		temp := i - 1
+		for temp >= 0 && A[temp].id < kata.id {
+			A[temp+1] = A[temp]
+			temp--
+		}
+		A[temp+1] = kata
+	}
+	fmt.Println("Komentar berhasil diurutkan")
+}
+
+func BinarySearch(a tabInt, n, cariID int) int {
+	var right, left, mid int
+	left = 0
+	right = n - 1
+	for i := 0; i < n; i++ {
+		mid = (left + right) / 2
+		if a[mid].id == cariID {
+			return mid
+		} else if a[mid].id < cariID {
+			left = mid + 1
+		} else {
+			right = mid - 1
+		}
+	}
+	return -1
+}
+
+func SeqSearch(a tabInt, n int, carikata string) {
+	var temukan bool
+	for i := 0; i < n; i++ {
+		if a[i].kata1 == carikata || a[i].kata2 == carikata || a[i].kata2 == carikata {
+			fmt.Printf("%-6s %-30s\n", "ID", "Komentar")
+			fmt.Printf("%-6d %s %s %s\n", a[i].id, a[i].kata1, a[i].kata2, a[i].kata3)
+			temukan = true
+		}
+	}
+	if !temukan {
+		fmt.Println("Komentar tidak ditemukan")
+	}
+}
