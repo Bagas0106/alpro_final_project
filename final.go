@@ -61,24 +61,28 @@ func main() {
 			positif, negatif = analisisSentiment(a, n)
 			fmt.Printf("Hasil Analisis:\nPositif : %d\nNegatif : %d\n", positif, negatif)
 		case "6":
-			sortAscending(&a, n)
+			sortIAscending(&a, n)
 			tampilKomentar(a, n)
 		case "7":
-			sortDescending(&a, n)
+			sortSDescending(&a, n)
 			tampilKomentar(a, n)
 		case "8":
 			var idx int
 			var cariID int
 			fmt.Print("Masukan code yang dicari: ")
 			fmt.Scanln(&cariID)
-			idx = BinarySearch(a, n, cariID)
-			if idx != -1 {
-				fmt.Println("Komentar ditemukan")
-				fmt.Printf("%-6s %-30s\n", "ID", "Komentar")
-				fmt.Printf("%-6d %s %s %s\n", a[idx].id, a[idx].kata1, a[idx].kata2, a[idx].kata3)
-			}
-			if idx == -1 {
-				fmt.Print("Komentar tidak ditemukan")
+			if !isSorted(a, n) {
+				fmt.Println("Komentar belum terurut, silahakan urutkan komentar dahulu")
+			} else {
+				idx = BinarySearch(a, n, cariID)
+				if idx != -1 {
+					fmt.Println("Komentar ditemukan")
+					fmt.Printf("%-6s %-30s\n", "ID", "Komentar")
+					fmt.Printf("%-6d %s %s %s\n", a[idx].id, a[idx].kata1, a[idx].kata2, a[idx].kata3)
+				}
+				if idx == -1 {
+					fmt.Print("Komentar tidak ditemukan")
+				}
 			}
 		case "9":
 			var kata string
@@ -223,7 +227,7 @@ func check(pn []string, kata string) bool {
 	return false
 }
 
-func sortAscending(A *tabInt, n int) {
+func sortIAscending(A *tabInt, n int) {
 	for i := 1; i < n; i++ {
 		kata := A[i]
 		temp := i - 1
@@ -236,17 +240,23 @@ func sortAscending(A *tabInt, n int) {
 	fmt.Println("Komentar berhasil diurutkan")
 }
 
-func sortDescending(A *tabInt, n int) {
-	for i := 1; i < n; i++ {
-		kata := A[i]
-		temp := i - 1
-		for temp >= 0 && A[temp].id < kata.id {
-			A[temp+1] = A[temp]
-			temp--
+func sortSDescending(a *tabInt, n int) {
+	var pass, idx, i int
+	pass = 1
+	for pass <= n-1 {
+		idx = pass - 1
+		i = pass
+		for i < n {
+			if a[idx].id < a[i].id {
+				idx = i
+			}
+			i++
 		}
-		A[temp+1] = kata
+		temp := a[pass-1]
+		a[pass-1] = a[idx]
+		a[idx] = temp
+		pass++
 	}
-	fmt.Println("Komentar berhasil diurutkan")
 }
 
 func BinarySearch(a tabInt, n, cariID int) int {
@@ -266,6 +276,15 @@ func BinarySearch(a tabInt, n, cariID int) int {
 	return -1
 }
 
+func isSorted(a tabInt, n int) bool {
+	var i int
+	for i = 1; i < n; i++ {
+		if a[i-1].id > a[i].id {
+			return false
+		}
+	}
+	return true
+}
 func SeqSearch(a tabInt, n int, carikata string) {
 	var temukan bool
 	for i := 0; i < n; i++ {
